@@ -231,10 +231,10 @@ export function PriorityMatrix() {
   return (
     <div className={styles.matrix}>
       <div className={styles.mPlot}>
-        <div className={styles.q} style={{ left: "50%", top: 0, background: "#fde7e5" }}><b style={{ color: "#a12622" }}>FIX FIRST</b></div>
+        <div className={styles.q} style={{ left: "50%", top: 0, background: "#fde7e5", justifyContent: "flex-end" }}><b style={{ color: "#a12622" }}>FIX FIRST</b></div>
         <div className={styles.q} style={{ left: 0, top: 0, background: "#fff7e0" }}>Severe, rarer: safeguard</div>
-        <div className={styles.q} style={{ left: 0, top: "50%", background: "#f4f6f8" }}>Monitor</div>
-        <div className={styles.q} style={{ left: "50%", top: "50%", background: "#fff1e0" }}>Frequent irritants: quick wins</div>
+        <div className={`${styles.q} ${styles.qLow}`} style={{ left: 0, top: "50%", background: "#f4f6f8" }}>Monitor</div>
+        <div className={`${styles.q} ${styles.qLow}`} style={{ left: "50%", top: "50%", background: "#fff1e0" }}>Frequent irritants: quick wins</div>
         {PRIOR.map((p, k) => (
           <motion.div key={p.l} className={styles.dot} initial={{ left: "50%", top: "110%", opacity: 0 }} whileInView={{ left: `${p.x * 100}%`, top: `${(1 - p.y) * 100}%`, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 + k * 0.15, type: "spring", stiffness: 120, damping: 16 }}>
             <i style={{ background: p.c }} />

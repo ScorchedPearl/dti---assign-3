@@ -43,19 +43,22 @@
 
 .matrix { position: relative; padding: 0 0 34px 34px; max-width: 760px; margin: 0 auto; }
 .mPlot { position: relative; aspect-ratio: 1.5; border: 2px solid #555; background: #fff; }
-.q { position: absolute; width: 50%; height: 50%; padding: 10px 12px; font-size: 13px; font-weight: 700; color: #666; }
+.q { position: absolute; width: 50%; height: 50%; padding: 10px 12px; font-size: 13px; font-weight: 700; color: #666; display: flex; align-items: flex-start; pointer-events: none; }
+.qLow { align-items: flex-end; }
 .q:nth-child(2) { text-align: left; }
 .dot { position: absolute; margin: -9px 0 0 -9px; }
 .dot i { display: block; width: 18px; height: 18px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
 .dot span { position: absolute; top: -1px; white-space: nowrap; font-size: 13.5px; font-weight: 700; }
 .axisX { text-align: center; font-size: 14px; color: var(--muted); margin-top: 8px; }
-.axisY { position: absolute; left: 0; top: 40%; transform: rotate(-90deg); transform-origin: left top; font-size: 14px; color: var(--muted); white-space: nowrap; translate: 0 100px; }
+.axisY { position: absolute; left: 0; top: 0; bottom: 34px; width: 28px; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 14px; color: var(--muted); white-space: nowrap; }
 
 @media (max-width: 760px) {
   .personaTop { grid-template-columns: 1fr; }
   .voteRow { grid-template-columns: 44px 1fr; }
   .voteRow > :nth-child(3), .voteRow > :nth-child(4) { grid-column: 2; }
-  .dot span { font-size: 11px; }
+  .dot span { font-size: 9.5px; }
+  .matrix { padding-left: 26px; }
+  .q { font-size: 11px; padding: 6px 8px; }
 }
 .lensIcon { width: 42px; height: 42px; border-radius: 12px; background: #fff6dd; display: flex; align-items: center; justify-content: center; }
 .ac { display: flex; gap: 6px; align-items: flex-start; }
