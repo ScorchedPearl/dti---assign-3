@@ -8,6 +8,7 @@ import EmpathizeVideo from "@/videos/EmpathizeVideo";
 import DefineVideo from "@/videos/DefineVideo";
 import IdeateVideo from "@/videos/IdeateVideo";
 import SolutionVideo from "@/videos/SolutionVideo";
+import VishwasVideo from "@/videos/VishwasVideo";
 import data from "@/data/content.json";
 import styles from "./page.module.css";
 import { ArrowRight, ArrowUpRight, FileText, Play } from "lucide-react";
@@ -353,6 +354,12 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+          <Reveal>
+            <h3 className="h3">Vishwas: my part in Assignments 2 and 3</h3>
+            <p className="sub">A narrated walkthrough, from persona Ananya&apos;s point of view and journey map in Define to the PS-1 mind map, brainstorm stickies and ReadyPass in Ideate. The caption under the player is the script.</p>
+          </Reveal>
+          <VishwasVideo />
+
           <Reveal>
             <h3 className="h3">Submissions</h3>
             <div className={styles.docs}>
