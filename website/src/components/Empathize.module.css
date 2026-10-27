@@ -1,0 +1,54 @@
+.bars { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; align-items: start; }
+.barRow { display: grid; grid-template-columns: 230px 1fr 54px; gap: 12px; align-items: center; width: 100%; background: none; border: 0; padding: 7px 0; cursor: pointer; text-align: left; color: inherit; font-size: 15px; }
+.barRow[aria-pressed="true"] .barName { font-weight: 600; }
+.barName { font-weight: 600; }
+.barTrack { height: 32px; background: #e9edf3; border-radius: 8px; overflow: hidden; }
+.barFill { display: flex; align-items: center; justify-content: flex-end; height: 100%; border-radius: 8px; color: #fff; font-weight: 600; padding-right: 10px; font-size: 14px; }
+.code { font-size: 12px; font-weight: 700; background: #e7eef7; color: #17375e; border-radius: 99px; padding: 2px 0; text-align: center; }
+.note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+.quote { margin: 0; background: #fff; border: 1px solid var(--line); border-left: 3px solid; border-radius: 0 16px 16px 0; padding: 22px 24px; position: sticky; top: 90px; }
+.quote p { font-size: 22px; font-family: var(--font-display); font-weight: 600; line-height: 1.35; margin: 12px 0; }
+.quote footer { font-size: 13px; color: var(--muted); }
+.quoteCode { color: #fff; font-weight: 700; font-size: 12px; border-radius: 99px; padding: 3px 10px; }
+
+.net { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+.netSvg { width: 100%; height: auto; }
+.netText h4 { font-size: 24px; margin-bottom: 10px; }
+.netText p { margin: 0 0 12px; }
+.insight { background: #eef6f7; border-left: 4px solid var(--teal); padding: 10px 14px; font-weight: 700; border-radius: 0 10px 10px 0; }
+
+.journey { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+.journeySvg { width: 100%; height: auto; display: block; border-radius: 10px; }
+.stageRow { display: grid; gap: 8px; margin-top: 10px; }
+.stage { display: flex; flex-direction: column; gap: 4px; font-size: 13px; padding: 10px; border-radius: 10px; background: #f6f8fb; }
+.stage b { font-size: 14px; }
+.stage[data-low="true"] { background: #fdeceb; outline: 2px solid #f2b6b0; }
+.pain { color: #a12622; }
+.need { color: #1d5e2a; font-weight: 600; }
+
+.emap { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.quad { background: #fff; border: 1px solid var(--line); border-top: 3px solid; border-radius: 16px; padding: 18px 22px; min-height: 220px; }
+.quad h4 { font-size: 20px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.quad ul { margin: 0; padding-left: 18px; }
+.quad li { margin-bottom: 6px; font-size: 15.5px; }
+.emapCenter { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; border-radius: 50%; background: var(--navy); border: 5px solid var(--bg); display: flex; align-items: center; justify-content: center; font-size: 38px; }
+
+.p2n { display: flex; flex-direction: column; gap: 10px; }
+.p2nRow { display: grid; grid-template-columns: 1fr 70px 1.4fr 90px; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
+.p2nPain { color: #a12622; font-weight: 700; }
+.p2nArrow { height: 3px; background: linear-gradient(90deg, #c4453a, #2f8f4e); transform-origin: left; position: relative; }
+.p2nArrow::after { content: ""; position: absolute; right: -2px; top: -5px; border-left: 9px solid #2f8f4e; border-top: 6.5px solid transparent; border-bottom: 6.5px solid transparent; }
+.p2nNeed { color: #1d5e2a; font-weight: 600; }
+.p2nPr { font-size: 12px; font-weight: 700; text-align: center; border-radius: 99px; padding: 3px 0; background: #fff0c2; color: #7a5a00; }
+.p2nPr[data-p="Very high"], .p2nPr[data-p="High"] { background: #fde2e1; color: #a12622; }
+
+@media (max-width: 860px) {
+  .bars, .net { grid-template-columns: 1fr; }
+  .quote { position: static; }
+  .barRow { grid-template-columns: 1fr 54px; }
+  .barName { grid-column: 1 / -1; }
+  .p2nRow { grid-template-columns: 1fr; gap: 6px; }
+  .p2nArrow { width: 60px; }
+}
+@media (max-width: 560px) { .emap { grid-template-columns: 1fr; } .emapCenter { display: none; } }
+.emapCenter svg { display: block; }
