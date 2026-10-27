@@ -18,18 +18,19 @@ const PH = [
 const EMO_C: Record<number, string> = { 1: C.green, 0: C.amber, [-1]: "#f08a5b", [-2]: C.red };
 
 /* ---------------------------------------------------------------- A3 data */
-const MM: { name: string; icon: string; color: string; a: number; nodes: string[] }[] = [
-  { name: "Verified Checklist", icon: "📋", color: C.blue, a: -140, nodes: ["Dated, versioned checklist", "Annotated sample per document", "Change alerts by SMS and email"].reverse() },
-  { name: "Upload Confidence", icon: "☁️", color: "#e0735f", a: -40, nodes: ["Autosave and resume", "Size and format check before upload", "Staggered upload windows"] },
-  { name: "Status & Proof", icon: "✅", color: C.teal, a: 40, nodes: ["Per-document status lights", "Ready to Report pass with QR", "Fee confirmed in under 15 min"] },
-  { name: "Unexpected Resources", icon: "🔗", color: C.amber, a: 140, nodes: ["DigiLocker and JoSAA verified documents", "Senior volunteers on the official FAQ", "One-page summary for parents"] },
+// Mind map layout: branch nodes sit either side of the centre, leaves in outer columns so no connector crosses a box.
+const MM: { name: string; icon: string; color: string; bx: number; by: number; side: 1 | -1; ys: number[]; nodes: string[] }[] = [
+  { name: "Verified Checklist", icon: "📋", color: C.blue, bx: 500, by: 200, side: -1, ys: [125, 200, 275], nodes: ["Annotated sample per document", "Dated, versioned checklist", "Change alerts by SMS and email"] },
+  { name: "Upload Confidence", icon: "☁️", color: "#e0735f", bx: 780, by: 200, side: 1, ys: [125, 200, 275], nodes: ["Size and format check before upload", "Autosave and resume", "Staggered upload windows"] },
+  { name: "Unexpected Resources", icon: "🔗", color: C.amber, bx: 500, by: 545, side: -1, ys: [470, 545, 620], nodes: ["One-page summary for parents", "Senior volunteers on the official FAQ", "DigiLocker and JoSAA verified documents"] },
+  { name: "Status & Proof", icon: "✅", color: C.teal, bx: 780, by: 545, side: 1, ys: [470, 545, 620], nodes: ["Ready to Report pass with QR", "Fee confirmed in under 15 min", "Per-document status lights"] },
 ];
-const CX = 640, CY = 392, R1 = 160, R2 = 318, SPREAD = 23;
-const polar = (deg: number, r: number): [number, number] => [CX + Math.cos((deg * Math.PI) / 180) * r, CY + Math.sin((deg * Math.PI) / 180) * r];
-const LINKS: [[number, number], [number, number], string, number, number][] = [
-  [[0, 1], [1, 1], "prevent rejections", 0, -56],
-  [[3, 0], [2, 0], "auto-accepted items", 70, 50],
-  [[0, 0], [3, 2], "family plans travel", -80, 0],
+const CX = 640, CY = 372, LW = 250, BW = 170, BH = 66;
+const leafX = (side: 1 | -1) => (side === -1 ? 50 : 980);
+const MMLINKS: { d: string; label: string; lx: number; ly: number; anchor: "middle" | "start" }[] = [
+  { d: "M175,97 V80 H1105 V97", label: "prevent rejections", lx: 640, ly: 70, anchor: "middle" },
+  { d: "M175,303 V442", label: "family plans travel", lx: 192, ly: 378, anchor: "start" },
+  { d: "M175,648 V676 H1105 V648", label: "auto-accepted items", lx: 640, ly: 668, anchor: "middle" },
 ];
 
 const BOARD: { h: string; icon: string; c: string; s: [string, string, string?][] }[] = [
@@ -116,7 +117,7 @@ export const scenes: Scene[] = [
     caption:
       "Ananya Verma is 18, from Patna. She reads every advisory, keeps a printed folder and uploads early. She travels about 600 km by train with her father, and the return ticket is already booked two days later. What she wants is certainty before she departs.",
     render: (t) => {
-      const route: [number, number][] = [[720, 330], [850, 380], [990, 140], [1170, 230]];
+      const route: [number, number][] = [[775, 330], [880, 380], [1000, 140], [1170, 230]];
       const k = prog(t, 3.2, 4.2);
       const [tx, ty] = bez(route, k);
       const pulse = 0.5 + 0.5 * Math.sin(t * 5);
@@ -148,7 +149,7 @@ export const scenes: Scene[] = [
             <div style={{ fontWeight: 700, fontSize: 20, marginTop: 4 }}>Patna</div>
             <div style={{ color: C.soft, fontSize: 16 }}>with her father</div>
           </F>
-          <F t={t} at={3} style={{ left: 1090, top: 250, width: 160 }}>
+          <F t={t} at={3} style={{ left: 1110, top: 282, width: 150 }}>
             <div style={{ fontSize: 34 }}>🏫</div>
             <div style={{ fontWeight: 700, fontSize: 20 }}>IIITA campus</div>
           </F>
@@ -327,37 +328,30 @@ export const scenes: Scene[] = [
     caption:
       "My individual mind map for PS-1 is called Travel-Ready Registration, and I focused it on the ERP and the upload. Four branches: a verified checklist, upload confidence, status and proof, and unexpected resources like DigiLocker and JoSAA. The cross-links show how ideas help each other, and the big insight is that the checklist and the upload should be the same object.",
     render: (t) => {
-      const leaf: Record<string, [number, number]> = {};
-      MM.forEach((b, bi) => b.nodes.forEach((_, ni) => (leaf[`${bi}-${ni}`] = polar(b.a + (ni - 1) * SPREAD, R2))));
       const insight = prog(t, 13, 0.7);
       return (
         <>
           <F t={t} at={0.1} style={{ left: 40, top: 22, width: 600 }}><Kicker color={C.purple}>Assignment 3 · Mind map · PS-1</Kicker></F>
-          <div style={{ position: "absolute", inset: 0, opacity: 1 - 0.7 * insight }}>
+          <div style={{ position: "absolute", inset: 0, opacity: 1 - insight, visibility: insight >= 1 ? "hidden" : "visible" }}>
             <svg style={{ position: "absolute", left: 0, top: 0 }} width={1280} height={720}>
               {MM.map((b, bi) => {
-                const [bx, by] = polar(b.a, R1);
-                const s = 1.2 + bi * 1.9;
+                const s0 = 1.2 + bi * 1.9;
+                const ex = b.bx + b.side * (BW / 2);
                 return (
                   <g key={b.name}>
-                    <DrawPath t={t} at={s} d={0.7} color={b.color} width={4} dPath={`M${CX},${CY} L${bx},${by}`} />
-                    {b.nodes.map((_, ni) => {
-                      const [lx, ly] = leaf[`${bi}-${ni}`];
-                      return <DrawPath key={ni} t={t} at={s + 0.5 + ni * 0.25} d={0.6} color={b.color} width={2.5} dPath={`M${bx},${by} L${lx},${ly}`} />;
-                    })}
+                    <DrawPath t={t} at={s0} d={0.7} color={b.color} width={4} dPath={`M${CX},${CY} L${b.bx},${b.by}`} />
+                    {b.nodes.map((_, ni) => (
+                      <DrawPath key={ni} t={t} at={s0 + 0.6 + ni * 0.25} d={0.6} color={b.color} width={2.5} dPath={`M${ex},${b.by} L${leafX(b.side) + (b.side === -1 ? LW : 0)},${b.ys[ni]}`} />
+                    ))}
                   </g>
                 );
               })}
-              {LINKS.map(([a, b, lbl, dx, dy], i) => {
-                const [x1, y1] = leaf[`${a[0]}-${a[1]}`];
-                const [x2, y2] = leaf[`${b[0]}-${b[1]}`];
-                const cx2 = (x1 + x2) / 2 + dx, cy2 = (y1 + y2) / 2 + dy;
-                const lx = 0.25 * x1 + 0.5 * cx2 + 0.25 * x2, ly = 0.25 * y1 + 0.5 * cy2 + 0.25 * y2;
+              {MMLINKS.map((l, i) => {
                 const k = prog(t, 9.4 + i * 1.1, 0.8);
                 return (
-                  <g key={lbl} opacity={k}>
-                    <path d={`M${x1},${y1} Q${cx2},${cy2} ${x2},${y2}`} fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray="7 7" />
-                    <text x={a[0] === 3 ? lx - 4 : lx} y={ly - 8} fill={C.amber} fontSize={17} fontWeight={700} textAnchor={a[0] === 3 ? "end" : "middle"} stroke="#0e2340" strokeWidth={4} paintOrder="stroke">{lbl}</text>
+                  <g key={l.label} opacity={k}>
+                    <path d={l.d} fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray="7 7" strokeLinejoin="round" />
+                    <text x={l.lx} y={l.ly} fill={C.amber} fontSize={18} fontWeight={700} textAnchor={l.anchor} stroke="#0e2340" strokeWidth={5} paintOrder="stroke">{l.label}</text>
                   </g>
                 );
               })}
@@ -366,29 +360,25 @@ export const scenes: Scene[] = [
               <div style={{ width: 176, height: 176, borderRadius: "50%", background: "radial-gradient(circle at 30% 25%, #2d5c92, #17375e)", border: `3px solid ${GREEN}`, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 16, fontFamily: "var(--font-display)", fontSize: 22, lineHeight: 1.15, boxShadow: `0 0 40px ${GREEN}33` }}>Travel-Ready Registration</div>
             </F>
             {MM.map((b, bi) => {
-              const [bx, by] = polar(b.a, R1);
-              const s = 1.2 + bi * 1.9;
+              const s0 = 1.2 + bi * 1.9;
               return (
                 <div key={b.name}>
-                  <F t={t} at={s + 0.4} s={0.7} y={0} style={{ left: bx - 78, top: by - 28, width: 156 }}>
-                    <div style={{ background: b.color, color: "#0b1a2e", borderRadius: 14, padding: "7px 8px", fontWeight: 700, fontSize: 16, textAlign: "center", lineHeight: 1.15, boxShadow: "0 8px 20px rgba(0,0,0,.35)" }}>
-                      <span style={{ fontSize: 20 }}>{b.icon}</span><br />{b.name}
+                  <F t={t} at={s0 + 0.4} s={0.7} y={0} style={{ left: b.bx - BW / 2, top: b.by - BH / 2, width: BW }}>
+                    <div style={{ background: b.color, color: "#0b1a2e", borderRadius: 14, height: BH, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 16, textAlign: "center", lineHeight: 1.15, boxShadow: "0 8px 20px rgba(0,0,0,.35)" }}>
+                      <span style={{ fontSize: 20 }}>{b.icon}</span>{b.name}
                     </div>
                   </F>
-                  {b.nodes.map((n, ni) => {
-                    const [lx, ly] = leaf[`${bi}-${ni}`];
-                    return (
-                      <F key={n} t={t} at={s + 0.9 + ni * 0.25} s={0.85} y={0} style={{ left: lx - 100, top: ly - 26, width: 200 }}>
-                        <div style={{ background: "rgba(14,35,64,.92)", border: `1.5px solid ${b.color}`, borderRadius: 12, padding: "7px 10px", fontSize: 15.5, lineHeight: 1.2, textAlign: "center", minHeight: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>{n}</div>
-                      </F>
-                    );
-                  })}
+                  {b.nodes.map((n, ni) => (
+                    <F key={n} t={t} at={s0 + 0.9 + ni * 0.25} s={0.85} y={0} style={{ left: leafX(b.side), top: b.ys[ni] - 28, width: LW }}>
+                      <div style={{ background: "#12294a", border: `1.5px solid ${b.color}`, borderRadius: 12, padding: "6px 12px", fontSize: 17, lineHeight: 1.2, textAlign: "center", height: 56, display: "flex", alignItems: "center", justifyContent: "center" }}>{n}</div>
+                    </F>
+                  ))}
                 </div>
               );
             })}
           </div>
           <div style={{ position: "absolute", left: 230, top: 150, width: 820, opacity: insight }}>
-            <Card color={GREEN} style={{ padding: "26px 32px" }}>
+            <Card color={GREEN} style={{ padding: "26px 32px", background: "#12294a" }}>
               <Kicker color={GREEN}>Three insights from my map</Kicker>
               {[
                 "The checklist and the upload should be the same object: every list item becomes an upload slot with a status.",
